@@ -2,7 +2,6 @@ import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import * as admin from 'firebase-admin';
-import * as fs from 'fs';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -26,15 +25,15 @@ async function bootstrap() {
 
 
   // Retrieve the service file name from the env file
-  const accountPath = configService.get<string>('SA_KEY')!;
-  console.log('accountPath', accountPath);
-  // You can refine the type definitions for the service file; as you can see, I haven't focused on that yet
-  const serviceAccount: any = JSON.parse(fs.readFileSync(accountPath, 'utf8'));
+  const firestoreProjectId = configService.get<string>('FIRESTORE_PROJECT_ID')!;
+  const firestorePrivateKey = configService.get<string>('FIRESTORE_PRIVATE_KEY')!.replace(/\\n/g, '\n');
+  const firestoreClientEmail = configService.get<string>('FIRESTORE_CLIENT_EMAIL')!;
 
+  console.log('firestorePrivateKey', firestorePrivateKey)
   const adminConfig: admin.ServiceAccount = {
-    projectId: serviceAccount.project_id,
-    privateKey: serviceAccount.private_key,
-    clientEmail: serviceAccount.client_email,
+    projectId: firestoreProjectId,
+    privateKey: firestorePrivateKey,
+    clientEmail: firestoreClientEmail,
   };
 
   admin.initializeApp({

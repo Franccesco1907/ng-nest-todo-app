@@ -1,6 +1,6 @@
 {
 	"name": "Backend DevContainer",
-	"dockerComposeFile": "../../docker-compose.yml",
+	"dockerComposeFile": "../../docker-compose.local.yml",
 	"service": "backend",
 	"workspaceFolder": "/workspace/backend",
 	"remoteUser": "root",
