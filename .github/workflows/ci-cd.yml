@@ -29,16 +29,18 @@ jobs:
       # Build Frontend Docker image
       - name: Build Frontend Docker image
         run: |
-          cd frontend
+          pwd
+          ls -l
+          cd $GITHUB_WORKSPACE/frontend
           docker build -t ${{ secrets.DOCKER_USERNAME }}/todo-frontend:${{ github.sha }} -f frontend/Dockerfile.prod .
-          cd ..
+          cd $GITHUB_WORKSPACE
       
       # Build Backend Docker image
       - name: Build Backend Docker image
         run: |
-          cd backend
+          cd $GITHUB_WORKSPACE/backend
           docker build -t ${{ secrets.DOCKER_USERNAME }}/todo-backend:${{ github.sha }} -f backend/Dockerfile.prod .
-          cd ..
+          cd $GITHUB_WORKSPACE
 
       # Upload images to Docker Hub
       - name: Push Frontend Docker image to Docker Hub
