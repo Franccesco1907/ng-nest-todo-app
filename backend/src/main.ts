@@ -36,6 +36,8 @@ async function bootstrap() {
     clientEmail: firestoreClientEmail,
   };
 
+  console.log('adminConfig', adminConfig)
+
   admin.initializeApp({
     credential: admin.credential.cert(adminConfig),
     databaseURL: `https://${adminConfig.projectId}.firebaseio.com`,
