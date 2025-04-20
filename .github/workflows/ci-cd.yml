@@ -26,6 +26,27 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      # Create .env file for the backend
+      - name: Create .env file in backend
+        run: |
+          cd backend
+          echo "NODE_ENV=${{ secrets.NODE_ENV }}" >> .env
+          echo "PORT=${{ secrets.PORT }}" >> .env
+          echo "ALLOWED_ORIGINS=${{ secrets.ALLOWED_ORIGINS }}" >> .env
+          echo "SA_KEY=${{ secrets.SA_KEY }}" >> .env
+          echo "FIRESTORE_PROJECT_ID=${{ secrets.FIRESTORE_PROJECT_ID }}" >> .env
+          echo "FIRESTORE_KEY_FILE=${{ secrets.FIRESTORE_KEY_FILE }}" >> .env
+          cat .env
+          cd ..
+
+      # Create service-account.json file for the backend
+      - name: Create service-account.json in backend
+        run: |
+          cd backend
+          echo '${{ secrets.SERVICE_ACCOUNT_JSON }}' > service-account.json
+          cat service-account.json
+          cd ..
+
       # Build Frontend Docker image
       - name: Build Frontend Docker image
         run: |
@@ -65,27 +86,6 @@ jobs:
 
       - name: Log in to Railway
         run: railway login --apiKey ${{ secrets.RAILWAY_API_KEY }}
-
-      # Create .env file for the backend
-      - name: Create .env file in backend
-        run: |
-          cd backend
-          echo "NODE_ENV=${{ secrets.NODE_ENV }}" >> .env
-          echo "PORT=${{ secrets.PORT }}" >> .env
-          echo "ALLOWED_ORIGINS=${{ secrets.ALLOWED_ORIGINS }}" >> .env
-          echo "SA_KEY=${{ secrets.SA_KEY }}" >> .env
-          echo "FIRESTORE_PROJECT_ID=${{ secrets.FIRESTORE_PROJECT_ID }}" >> .env
-          echo "FIRESTORE_KEY_FILE=${{ secrets.FIRESTORE_KEY_FILE }}" >> .env
-          cat .env
-          cd ..
-
-      # Create service-account.json file for the backend
-      - name: Create service-account.json in backend
-        run: |
-          cd backend
-          echo '${{ secrets.SERVICE_ACCOUNT_JSON }}' > service-account.json
-          cat service-account.json
-          cd ..
 
       # Deploy Frontend Docker image to Railway
       - name: Deploy Frontend Docker image to Railway
