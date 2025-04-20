@@ -7,11 +7,15 @@ import { FirestoreModule } from './firestore';
     FirestoreModule.forRoot({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
-        keyFilename: configService.get<string>('SA_KEY'),
+        projectId: configService.get<string>('FIRESTORE_PROJECT_ID'),
+        credentials: {
+          client_email: configService.get<string>('FIRESTORE_CLIENT_EMAIL'),
+          private_key: configService.get<string>('FIRESTORE_PRIVATE_KEY')?.replace(/\\n/g, '\n'),
+        },
       }),
       inject: [ConfigService],
     }),
   ],
   exports: [FirestoreModule],
 })
-export class DatabaseModule {}
+export class DatabaseModule { }
