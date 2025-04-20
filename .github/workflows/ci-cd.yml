@@ -84,17 +84,14 @@ jobs:
       - name: Add Railway CLI to path
         run: echo "${HOME}/.railway/bin" >> $GITHUB_PATH
 
-      - name: Log in to Railway
-        run: railway login
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_API_KEY }}
-
       # Deploy Frontend Docker image to Railway
       - name: Deploy Frontend Docker image to Railway
         run: |
           railway service:deploy --project ${{ secrets.RAILWAY_PROJECT_ID }} \
           --service ${{ secrets.RAILWAY_SERVICE_ID_FRONTEND }} \
           --image ${{ secrets.DOCKER_USERNAME }}/todo-frontend:${{ github.sha }}
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_API_KEY }}
       
       # Deploy Backend Docker image to Railway
       - name: Deploy Backend Docker image to Railway
@@ -102,3 +99,5 @@ jobs:
           railway service:deploy --project ${{ secrets.RAILWAY_PROJECT_ID }} \
           --service ${{ secrets.RAILWAY_SERVICE_ID_BACKEND }} \
           --image ${{ secrets.DOCKER_USERNAME }}/todo-backend:${{ github.sha }}
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_API_KEY }}
