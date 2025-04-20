@@ -1,0 +1,24 @@
+<div class="todo-page">
+  <mat-card class="todo-container">
+    <mat-card-header>
+      <mat-card-title class="todo-title">To Do's Lists <mat-icon>edit</mat-icon> </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content style="min-width: 100%;">
+      <app-todo-list [todos]="todos" (selectionChanged)="handleSelectionChange($event)"></app-todo-list>
+    </mat-card-content>
+
+    <div class="button-group">
+      <button mat-raised-button color="accent" (click)="markSelectedAsCompleted()" [disabled]="isSelectionEmpty">
+        Mark as Completed
+      </button>
+      <button mat-raised-button color="accent" (click)="markSelectedAsCompleted()" [disabled]="isSelectionEmpty">
+        Show only uncompleted
+      </button>
+    </div>
+  </mat-card>
+
+  <button class="add-todo" (click)="addTodo()">
+    +
+  </button>
+</div>

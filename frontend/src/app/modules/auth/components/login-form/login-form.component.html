@@ -1,0 +1,26 @@
+<mat-card>
+  <div class="logo">
+    <img src="assets/images/logo-atom-chat.png" alt="Logo de Atom Todo">
+  </div>
+  <mat-card-content>
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <p>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email</mat-label>
+          <input matInput placeholder="E-mail" formControlName="email" type="email">
+          <mat-icon matSuffix>email</mat-icon>
+          <mat-error *ngIf="email?.hasError('required') && email?.touched">The email is required</mat-error>
+          <mat-error *ngIf="email?.hasError('email') && email?.touched">Email not valid</mat-error>
+        </mat-form-field>
+      </p>
+
+      <p *ngIf="error" class="error">
+        {{ error }}
+      </p>
+
+      <div class="button">
+        <button type="submit" mat-raised-button color="primary">Login</button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

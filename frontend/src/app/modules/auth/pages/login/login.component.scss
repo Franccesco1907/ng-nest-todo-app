@@ -1,0 +1,13 @@
+@use "theme" as theme;
+
+.login-page {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(120deg,
+      rgba(map-get(theme.$blue-accent-palette, 600), 0.95),
+      rgba(map-get(theme.$orange-atom-palette, 900), 0.95));
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}

@@ -1,0 +1,19 @@
+.todo-dialog-title-header {
+  display: flex;
+  align-items: center;
+  margin-top: 1rem;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+
+.todo-dialog-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.todo-dialog-actions {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}

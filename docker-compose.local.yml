@@ -1,0 +1,25 @@
+version: '3.9'
+services:
+  frontend:
+    container_name: todo-frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ./frontend:/workspace/frontend
+      - /workspace/frontend/node_modules
+    ports:
+      - "4200:4200"
+    command: [ "npm", "run", "start" ]
+
+  backend:
+    container_name: todo-backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    volumes:
+      - ./backend:/workspace/backend
+      - /workspace/backend/node_modules
+    ports:
+      - "3000:3000"
+    command: [ "npm", "run", "start:dev" ]
