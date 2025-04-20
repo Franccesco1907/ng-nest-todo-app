@@ -33,7 +33,6 @@ jobs:
           echo "NODE_ENV=${{ secrets.NODE_ENV }}" >> .env
           echo "PORT=${{ secrets.PORT }}" >> .env
           echo "ALLOWED_ORIGINS=${{ secrets.ALLOWED_ORIGINS }}" >> .env
-          echo "SA_KEY=${{ secrets.SA_KEY }}" >> .env
           echo "FIRESTORE_PROJECT_ID=${{ secrets.FIRESTORE_PROJECT_ID }}" >> .env
           echo "FIRESTORE_PRIVATE_KEY=${{ secrets.FIRESTORE_PRIVATE_KEY }}" >> .env
           echo "FIRESTORE_CLIENT_EMAIL=${{ secrets.FIRESTORE_CLIENT_EMAIL }}" >> .env
