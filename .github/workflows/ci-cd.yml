@@ -85,7 +85,9 @@ jobs:
         run: echo "${HOME}/.railway/bin" >> $GITHUB_PATH
 
       - name: Log in to Railway
-        run: railway login --apiKey ${{ secrets.RAILWAY_API_KEY }}
+        run: railway login
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_API_KEY }}
 
       # Deploy Frontend Docker image to Railway
       - name: Deploy Frontend Docker image to Railway
