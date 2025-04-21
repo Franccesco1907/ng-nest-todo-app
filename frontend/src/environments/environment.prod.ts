@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://localhost:3000/v1'
+  apiUrl: 'https://todo-backend-production-aa75.up.railway.app/v1'
 };
