@@ -1,5 +1,20 @@
 <div class="todo-page">
   <mat-card class="todo-container">
+    <div class="logout-button-container">
+      <button mat-icon-button color="accent" (click)="logout()">
+        <mat-icon>logout</mat-icon>
+      </button>
+    </div>
+
+    <div class="datetime-card-container">
+      <mat-card class="datetime-card">
+        <mat-card-content class="datetime-content">
+          <mat-icon>calendar_today</mat-icon>
+          <span class="current-time">{{ currentTime | date:'HH:mm:ss' }}</span>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
     <mat-card-header>
       <mat-card-title class="todo-title">To Do's Lists <mat-icon>edit</mat-icon> </mat-card-title>
     </mat-card-header>
@@ -14,7 +29,7 @@
         [disabled]="isSelectionEmpty || !haveUncompletedSelected">
         Mark as Completed
       </button>
-      <button mat-raised-button color="accent" (click)="toggleShowCompleted()">
+      <button mat-raised-button color="accent" (click)="toggleShowCompleted()" [disabled]="todos.length === 0">
         {{ showCompleted ? 'Show All' : 'Show Only Uncompleted' }}
       </button>
     </div>

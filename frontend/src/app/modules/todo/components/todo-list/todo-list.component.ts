@@ -8,13 +8,14 @@ import { ITodo } from '../../../../core/models';
 import { NotificationService, TodoService } from '../../../../core/services';
 import { MaterialStandaloneModules } from '../../../../shared/ui';
 import { TodoDialogComponent } from '../todo-dialog/todo-dialog.component';
+import { MatTableResponsiveModule } from '../../../../shared/directives/mat-table-responsive.module';
 
 @Component({
   selector: 'app-todo-list',
   standalone: true,
-  imports: [CommonModule, MaterialStandaloneModules, TodoDialogComponent],
+  imports: [CommonModule, MaterialStandaloneModules, TodoDialogComponent, MatTableResponsiveModule],
   templateUrl: './todo-list.component.html',
-  styleUrl: './todo-list.component.scss'
+  styleUrl: './todo-list.component.scss',
 })
 export class TodoListComponent implements OnChanges {
   @Input() todos: ITodo[] = [];

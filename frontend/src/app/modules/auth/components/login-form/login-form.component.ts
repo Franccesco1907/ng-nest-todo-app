@@ -22,9 +22,9 @@ export class LoginFormComponent {
   });
 
   constructor(
-    private router: Router,
-    private authService: AuthService,
-    private notificationService: NotificationService,
+    private readonly router: Router,
+    private readonly authService: AuthService,
+    private readonly notificationService: NotificationService,
   ) { }
 
   submit() {

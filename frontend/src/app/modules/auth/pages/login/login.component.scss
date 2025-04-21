@@ -2,7 +2,7 @@
 
 .login-page {
   display: flex;
-  height: 100%;
+  min-height: 100%;
   width: 100%;
   background: linear-gradient(120deg,
       rgba(map-get(theme.$blue-accent-palette, 600), 0.95),

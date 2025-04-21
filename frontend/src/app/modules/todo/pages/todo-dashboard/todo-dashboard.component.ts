@@ -1,16 +1,19 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Subject, takeUntil } from 'rxjs';
+import { interval, Subject, Subscription, takeUntil } from 'rxjs';
 import { ITodo } from '../../../../core/models';
 import { NotificationService, TodoService } from '../../../../core/services';
 import { MaterialStandaloneModules } from '../../../../shared/ui';
 import { TodoDialogComponent } from '../../components/todo-dialog/todo-dialog.component';
 import { TodoListComponent } from '../../components/todo-list/todo-list.component';
+import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-todo-dashboard',
   standalone: true,
-  imports: [TodoListComponent, MaterialStandaloneModules],
+  imports: [CommonModule, TodoListComponent, MaterialStandaloneModules],
   templateUrl: './todo-dashboard.component.html',
   styleUrl: './todo-dashboard.component.scss'
 })
@@ -20,19 +23,30 @@ export class TodoDashboardPageComponent implements OnInit, OnDestroy {
   selectedTodoIds: string[] = [];
   haveUncompletedSelected = false;
   showCompleted = false;
+  currentTime: Date = new Date();
+
+  private timeSubscription: Subscription | undefined;
   private readonly destroy$ = new Subject<void>();
 
   constructor(
     public dialog: MatDialog,
-    private todoService: TodoService,
+    private readonly todoService: TodoService,
     private readonly notificationService: NotificationService,
+    private readonly authService: AuthService,
   ) { }
 
   ngOnInit(): void {
     this.loadTodos();
+    this.timeSubscription = interval(1000)
+      .subscribe(() => {
+        this.currentTime = new Date();
+      });
   }
 
   ngOnDestroy(): void {
+    if (this.timeSubscription) {
+      this.timeSubscription.unsubscribe();
+    }
     this.destroy$.next();
     this.destroy$.complete();
   }
@@ -117,5 +131,9 @@ export class TodoDashboardPageComponent implements OnInit, OnDestroy {
 
   get isSelectionEmpty(): boolean {
     return this.selectedTodoIds.length === 0;
+  }
+
+  logout() {
+    this.authService.logout();
   }
 }
