@@ -6,15 +6,19 @@ import { BaseDocument } from './';
 export class FirestoreBaseRepository<T extends BaseDocument<T>> {
   constructor(protected readonly collection: CollectionReference<T>) { }
 
+  async findOneBy(id: string, filter: Partial<T> = {}): Promise<T | null> {
+    const query = this.buildQuery({ ...filter, id } as Partial<T>);
+    const snapshot = await query.limit(1).get();
+    if (!snapshot.empty) {
+      const doc = snapshot.docs[0];
+      const data = doc.data();
+      return data.deletedAt ? null : data;
+    }
+    return null;
+  }
+
   async getDataByDocumentId(id: string): Promise<T | null> {
-    const snapshot = await this.collection.doc(id).get();
-
-    if (!snapshot.exists) return null;
-
-    const data = snapshot.data()!;
-    if (data.deletedAt) return null;
-
-    return data;
+    return this.findOneBy(id);
   }
 
   protected buildQuery(filter: Partial<T>): Query<T> {
@@ -22,12 +26,11 @@ export class FirestoreBaseRepository<T extends BaseDocument<T>> {
 
     query = query.where('deletedAt', '==', null) as Query<T>;
 
-    console.log('Filter:', filter, query);
-
     for (const key in filter) {
       const value = filter[key];
-      if (value !== undefined) {
+      if (value !== undefined && value !== null) {
         query = query.where(key, '==', value) as Query<T>;
+        console.log(`Adding where clause: ${key} == ${value}`);
       }
     }
 
@@ -35,7 +38,6 @@ export class FirestoreBaseRepository<T extends BaseDocument<T>> {
   }
 
   async find(filter: Partial<T> = {}): Promise<T[]> {
-    console.log('Filter:', filter);
     const query = this.buildQuery(filter);
     const snapshot = await query.get();
 

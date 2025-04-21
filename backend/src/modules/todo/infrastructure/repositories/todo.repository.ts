@@ -17,22 +17,16 @@ export class TodoRepository implements TodoRepositoryInterface {
     this.firestoreRepository = new FirestoreBaseRepository(collection);
   }
 
-  async getTodoById(id: string): Promise<TodoModel | null> {
-    const document = await this.firestoreRepository.getDataByDocumentId(id);
+  async getTodoById(id: string, userId: string): Promise<TodoModel | null> {
+    const document = await this.firestoreRepository.findOneBy(id, { userId });
     return document ? TodoMapper.toTodoModel(document) : null;
   }
 
-  async findTodos(filter: Partial<TodoModel> = {}): Promise<TodoModel[]> {
-    const firestoreFilter: Partial<TodoDocument> = {};
-    if (filter) {
-      for (const key in filter) {
-        const value = filter[key];
-        if (value !== undefined) {
-          firestoreFilter[key] = value;
-        }
-      }
-    }
-    const documents = await this.firestoreRepository.find(firestoreFilter);
+  async findTodos(userId: string, filter: Partial<TodoModel> = {}): Promise<TodoModel[]> {
+    const todoFilter = TodoMapper.toTodoDocument({ ...filter, userId } as TodoModel);
+    console.log('Todo filter:', todoFilter);
+    const documents = await this.firestoreRepository.find(todoFilter);
+
     return documents.map(TodoMapper.toTodoModel);
   }
 
@@ -42,18 +36,19 @@ export class TodoRepository implements TodoRepositoryInterface {
     return TodoMapper.toTodoModel(createdDocument);
   }
 
-  async updateTodo(id: string, data: Partial<TodoModel>): Promise<TodoModel> {
-    const existingDocument = await this.firestoreRepository.getDataByDocumentId(id);
+  async updateTodo(id: string, userId: string, data: Partial<TodoModel>): Promise<TodoModel> {
+    const existingDocument = await this.firestoreRepository.findOneBy(id, { userId });
 
     if (!existingDocument) {
-      throw new NotFoundException(`Todo with ID ${id} not found`);
+      throw new NotFoundException(`Todo with ID ${id} not found for user ${userId}`);
     }
     const existingTodoModel = TodoMapper.toTodoModel(existingDocument);
 
     const updatedTodoModel: TodoModel = {
       ...existingTodoModel,
       ...data,
-      id: id,
+      id,
+      userId,
     };
 
     const updatedTodoDocument = TodoMapper.toTodoDocument(updatedTodoModel);
@@ -61,7 +56,22 @@ export class TodoRepository implements TodoRepositoryInterface {
     return TodoMapper.toTodoModel(updatedDocumentData);
   }
 
-  async softDeleteTodo(id: string): Promise<void> {
+  async softDeleteTodo(id: string, userId: string): Promise<void> {
+    const existingDocument = await this.firestoreRepository.findOneBy(id, { userId });
+    if (!existingDocument) {
+      throw new NotFoundException(`Todo with ID ${id} not found for user ${userId}`);
+    }
     await this.firestoreRepository.softDelete(id);
+  }
+
+  async markAsCompleted(ids: string[], userId: string): Promise<void> {
+    await Promise.all(
+      ids.map(async (id) => {
+        const existingDocument = await this.firestoreRepository.findOneBy(id, { userId });
+        if (existingDocument && !existingDocument.isCompleted) {
+          await this.firestoreRepository.update(id, { isCompleted: true });
+        }
+      }),
+    );
   }
 }

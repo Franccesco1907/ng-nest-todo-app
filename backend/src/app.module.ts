@@ -1,7 +1,4 @@
 import { AllExceptionFilter } from '@common/filters/http-exception.filter';
-import { LoggingInterceptor } from '@common/interceptors/logging.interceptor';
-import { ResponseInterceptor } from '@common/interceptors/response.interceptor';
-import { TimeOutInterceptor } from '@common/interceptors/timeout.interceptor';
 import { getEnvFile } from '@config/env';
 import { DatabaseModule } from '@database/database.module';
 import { TodoModule } from '@modules/todo/infrastructure/controllers';
@@ -10,6 +7,8 @@ import { ConfigModule } from '@nestjs/config';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { AuthModule } from '@modules/auth/infrastructure/controllers';
+import { LoggingInterceptor, ResponseInterceptor, TimeOutInterceptor } from '@common/interceptors';
 
 @Module({
   imports: [
@@ -19,6 +18,7 @@ import { AppService } from './app.service';
     }),
     DatabaseModule,
     TodoModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [
@@ -41,4 +41,4 @@ import { AppService } from './app.service';
     },
   ],
 })
-export class AppModule {}
+export class AppModule { }

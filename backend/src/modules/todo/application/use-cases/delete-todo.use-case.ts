@@ -3,7 +3,7 @@ import { Inject } from '@nestjs/common';
 
 export class DeleteTodoUseCase {
   constructor(@Inject(TodoRepository) private readonly repository: TodoRepository) { }
-  async execute(id: string) {
-    return this.repository.softDeleteTodo(id);
+  async execute(id: string, userId: string) {
+    return this.repository.softDeleteTodo(id, userId);
   }
 }

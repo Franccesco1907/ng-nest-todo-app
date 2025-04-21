@@ -24,7 +24,6 @@ async function bootstrap() {
   });
 
 
-  // Retrieve the service file name from the env file
   const firestoreProjectId = configService.get<string>('FIRESTORE_PROJECT_ID')!;
   const firestorePrivateKey = configService.get<string>('FIRESTORE_PRIVATE_KEY')!.replace(/\\n/g, '\n');
   const firestoreClientEmail = configService.get<string>('FIRESTORE_CLIENT_EMAIL')!;

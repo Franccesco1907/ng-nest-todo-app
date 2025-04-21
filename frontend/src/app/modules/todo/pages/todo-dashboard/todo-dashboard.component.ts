@@ -16,7 +16,10 @@ import { TodoListComponent } from '../../components/todo-list/todo-list.componen
 })
 export class TodoDashboardPageComponent implements OnInit, OnDestroy {
   todos: ITodo[] = [];
+  filteredTodos: ITodo[] = [];
   selectedTodoIds: string[] = [];
+  haveUncompletedSelected = false;
+  showCompleted = false;
   private readonly destroy$ = new Subject<void>();
 
   constructor(
@@ -40,8 +43,10 @@ export class TodoDashboardPageComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (todos) => {
-          console.log('todos', todos);
           this.todos = todos;
+          this.applyFilter();
+          this.selectedTodoIds = [];
+          this.showCompleted = false;
         },
         error: (error) => {
           console.error('Error loading todos:', error);
@@ -53,10 +58,25 @@ export class TodoDashboardPageComponent implements OnInit, OnDestroy {
 
   handleSelectionChange(selectedIds: string[]) {
     this.selectedTodoIds = selectedIds;
+    this.haveUncompletedSelected = this.todos
+      .filter(todo => selectedIds.includes(todo.id))
+      .some(todo => !todo.isCompleted);
   }
 
   markSelectedAsCompleted() {
-
+    if (this.selectedTodoIds.length > 0) {
+      this.todoService.markTodosAsCompleted(this.selectedTodoIds)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: () => {
+            this.loadTodos()
+          },
+          error: (error) => {
+            console.error('Error marking todos as completed:', error);
+            this.notificationService.showError('Failed to mark todos as completed.');
+          }
+        });
+    }
   }
 
   addTodo() {
@@ -71,9 +91,7 @@ export class TodoDashboardPageComponent implements OnInit, OnDestroy {
           .pipe(takeUntil(this.destroy$))
           .subscribe({
             next: (newTodo) => {
-              this.todos.push(newTodo);
-              this.todos = [...this.todos];
-              this.selectedTodoIds = [];
+              this.loadTodos()
             },
             error: (error) => {
               console.error('Error creating todo:', error);
@@ -82,6 +100,19 @@ export class TodoDashboardPageComponent implements OnInit, OnDestroy {
           });
       }
     });
+  }
+
+  toggleShowCompleted() {
+    this.showCompleted = !this.showCompleted;
+    this.applyFilter();
+  }
+
+  applyFilter() {
+    if (this.showCompleted) {
+      this.filteredTodos = this.todos.filter(todo => !todo.isCompleted);
+    } else {
+      this.filteredTodos = this.todos;
+    }
   }
 
   get isSelectionEmpty(): boolean {

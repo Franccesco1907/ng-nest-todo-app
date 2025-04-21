@@ -1,4 +1,5 @@
 import { Routes } from "@angular/router";
+import { AuthGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
     {
@@ -12,6 +13,7 @@ export const routes: Routes = [
     },
     {
         path: "todos",
-        loadComponent: () => import("./modules/todo/pages/todo-dashboard/todo-dashboard.component").then((m) => m.TodoDashboardPageComponent)
+        loadComponent: () => import("./modules/todo/pages/todo-dashboard/todo-dashboard.component").then((m) => m.TodoDashboardPageComponent),
+        canActivate: [AuthGuard]
     },
 ];

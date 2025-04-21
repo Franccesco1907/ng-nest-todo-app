@@ -1,13 +1,9 @@
 import {
   HttpErrorResponse,
-  HttpEvent,
-  HttpHandler,
-  HttpInterceptor,
-  HttpRequest,
+  HttpInterceptorFn,
   HttpResponse
 } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable, catchError, map, throwError } from 'rxjs';
+import { catchError, map, throwError } from 'rxjs';
 
 interface ApiResponse<T> {
   status: number;
@@ -15,29 +11,20 @@ interface ApiResponse<T> {
   errors: string[];
 }
 
-@Injectable()
-export class ResponseHandlerInterceptor implements HttpInterceptor {
-  intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    return next.handle(request).pipe(
-      map((event: HttpEvent<unknown>) => {
-        if (event instanceof HttpResponse) {
-          const response = event as HttpResponse<ApiResponse<any>>;
-          if (response.body && response.body.status >= 200 && response.body.status < 300) {
-            return new HttpResponse({
-              url: response.url ?? undefined,
-              status: response.status,
-              headers: response.headers,
-              body: response.body.data
-            });
-          }
+export const responseHandlerInterceptorFn: HttpInterceptorFn = (req, next) => {
+  return next(req).pipe(
+    map(event => {
+      if (event instanceof HttpResponse) {
+        const body = event.body as ApiResponse<any>;
+        if (body?.status >= 200 && body.status < 300) {
+          return event.clone({ body: body.data });
         }
-        return event;
-      },
-        catchError((error: HttpErrorResponse) => {
-          console.error('Error in the server response:', error);
-          return throwError(() => error);
-        })
-      )
-    );
-  }
-}
+      }
+      return event;
+    }),
+    catchError((error: HttpErrorResponse) => {
+      console.error('Error in the server response:', error);
+      return throwError(() => error);
+    })
+  );
+};

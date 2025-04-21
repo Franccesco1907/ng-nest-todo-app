@@ -23,4 +23,12 @@ export class NotificationService {
       verticalPosition: 'top'
     });
   }
+
+  showWarning(message: string) {
+    this.snackBar.open(message, 'Close', {
+      duration: 3000,
+      horizontalPosition: 'end',
+      verticalPosition: 'top'
+    });
+  }
 }

@@ -1,5 +1,6 @@
 export class TodoModel {
   id: string;
+  userId: string;
   title: string;
   description: string;
   isCompleted: boolean;

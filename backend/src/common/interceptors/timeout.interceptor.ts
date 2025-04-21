@@ -5,8 +5,8 @@ import { Observable, timeout } from 'rxjs';
 export class TimeOutInterceptor implements NestInterceptor {
   intercept(
     context: ExecutionContext,
-    nest: CallHandler<any>,
+    next: CallHandler<any>,
   ): Observable<any> | Promise<Observable<any>> {
-    return nest.handle().pipe(timeout(120000));
+    return next.handle().pipe(timeout(120000));
   }
 }

@@ -4,6 +4,7 @@ import {
   DeleteTodoUseCase,
   GetAllTodoUseCase,
   GetTodoUseCase,
+  MarkTodosAsCompleteUseCase,
   UpdateTodoUseCase,
 } from '@modules/todo/application/use-cases';
 import { Module } from '@nestjs/common';
@@ -20,6 +21,7 @@ import { TodoController } from './todo.controller';
     GetAllTodoUseCase,
     GetTodoUseCase,
     DeleteTodoUseCase,
+    MarkTodosAsCompleteUseCase,
   ],
 })
-export class TodoModule {}
+export class TodoModule { }

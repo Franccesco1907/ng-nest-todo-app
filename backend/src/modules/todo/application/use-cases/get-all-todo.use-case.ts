@@ -5,7 +5,7 @@ import { Inject } from '@nestjs/common';
 export class GetAllTodoUseCase {
   constructor(@Inject(TodoRepository) private readonly repository: TodoRepository) { }
 
-  async execute(filter: Partial<TodoModel>) {
-    return this.repository.findTodos(filter);
+  async execute(userId: string, filter: Partial<TodoModel>) {
+    return this.repository.findTodos(userId, filter);
   }
 }

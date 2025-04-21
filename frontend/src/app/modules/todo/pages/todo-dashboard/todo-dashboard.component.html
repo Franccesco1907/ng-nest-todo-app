@@ -5,15 +5,17 @@
     </mat-card-header>
 
     <mat-card-content style="min-width: 100%;">
-      <app-todo-list [todos]="todos" (selectionChanged)="handleSelectionChange($event)"></app-todo-list>
+      <app-todo-list [todos]="filteredTodos" (selectionChanged)="handleSelectionChange($event)"
+        (todoEdited)="loadTodos()" (todoDeleted)="loadTodos()"></app-todo-list>
     </mat-card-content>
 
     <div class="button-group">
-      <button mat-raised-button color="accent" (click)="markSelectedAsCompleted()" [disabled]="isSelectionEmpty">
+      <button mat-raised-button color="accent" (click)="markSelectedAsCompleted()"
+        [disabled]="isSelectionEmpty || !haveUncompletedSelected">
         Mark as Completed
       </button>
-      <button mat-raised-button color="accent" (click)="markSelectedAsCompleted()" [disabled]="isSelectionEmpty">
-        Show only uncompleted
+      <button mat-raised-button color="accent" (click)="toggleShowCompleted()">
+        {{ showCompleted ? 'Show All' : 'Show Only Uncompleted' }}
       </button>
     </div>
   </mat-card>

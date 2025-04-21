@@ -3,6 +3,8 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MaterialStandaloneModules } from '../../../../shared/ui';
+import { NotificationService } from '../../../../core/services';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-login-form',
@@ -19,13 +21,24 @@ export class LoginFormComponent {
     email: new FormControl('', [Validators.required, Validators.email]),
   });
 
-  constructor(private router: Router) { }
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private notificationService: NotificationService,
+  ) { }
 
   submit() {
     if (this.form.valid) {
-      console.log(this.form.value);
-      this.submitEM.emit(this.form.value);
-      this.router.navigate(['/todos']);
+      const { email } = this.form.value;
+      this.authService.login(email).subscribe({
+        next: () => {
+          this.notificationService.showSuccess('Welcome to Todo App!');
+          this.router.navigate(['/todos']);
+        },
+        error: (error) => {
+          this.notificationService.showError('Error in login');
+        }
+      })
     } else {
       this.form.markAllAsTouched();
     }

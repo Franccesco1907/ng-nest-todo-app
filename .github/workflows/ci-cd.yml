@@ -36,6 +36,8 @@ jobs:
           echo "FIRESTORE_PROJECT_ID=${{ secrets.FIRESTORE_PROJECT_ID }}" >> .env
           echo "FIRESTORE_PRIVATE_KEY=${{ secrets.FIRESTORE_PRIVATE_KEY }}" >> .env
           echo "FIRESTORE_CLIENT_EMAIL=${{ secrets.FIRESTORE_CLIENT_EMAIL }}" >> .env
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
+          echo "JWT_EXPIRATION=${{ secrets.JWT_EXPIRATION }}" >> .env
           cd ..
 
       # Build Frontend Docker image

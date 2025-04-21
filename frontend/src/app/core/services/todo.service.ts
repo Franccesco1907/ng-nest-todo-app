@@ -25,7 +25,7 @@ export class TodoService {
     return this.http.post<ITodo>(this.apiUrl, todo);
   }
 
-  updateTodo(id: string, todo: Omit<ITodo, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'>): Observable<ITodo> {
+  updateTodo(id: string, todo: Omit<ITodo, 'id' | 'userId' | 'createdAt' | 'updatedAt' | 'deletedAt'>): Observable<ITodo> {
     return this.http.patch<ITodo>(`${this.apiUrl}/${id}`, todo);
   }
 
@@ -33,7 +33,7 @@ export class TodoService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
-  markAsCompleted(ids: string[]): Observable<ITodo[]> {
-    return this.http.patch<ITodo[]>(`${this.apiUrl}/complete`, { ids });
+  markTodosAsCompleted(ids: string[]): Observable<ITodo[]> {
+    return this.http.patch<ITodo[]>(`${this.apiUrl}/mark-as-completed`, { ids });
   }
 }

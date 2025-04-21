@@ -19,6 +19,8 @@ import { TodoDialogComponent } from '../todo-dialog/todo-dialog.component';
 export class TodoListComponent implements OnChanges {
   @Input() todos: ITodo[] = [];
   @Output() selectionChanged = new EventEmitter<string[]>();
+  @Output() todoEdited = new EventEmitter<void>();
+  @Output() todoDeleted = new EventEmitter<void>();
   private readonly destroy$ = new Subject<void>();
 
   displayedColumns: string[] = ['select', 'title', 'description', 'createdAt', 'isCompleted', 'actions'];
@@ -59,7 +61,6 @@ export class TodoListComponent implements OnChanges {
   }
 
   editTodo(todo: ITodo) {
-    console.log('Editar:', todo);
     const dialogRef = this.dialog.open(TodoDialogComponent, {
       width: '500px',
       data: { mode: 'edit', todo }
@@ -67,13 +68,13 @@ export class TodoListComponent implements OnChanges {
 
     dialogRef.afterClosed().subscribe((result: ITodo) => {
       if (result) {
-        const { id, createdAt, updatedAt, deletedAt, ...updatedData } = result;
-
+        const { id, createdAt, updatedAt, deletedAt, userId, ...updatedData } = result;
         this.todoService.updateTodo(id, updatedData)
           .pipe(takeUntil(this.destroy$))
           .subscribe({
-            next: (updatedTodo) => {
-              this.updateTodoInList(updatedTodo);
+            next: () => {
+              this.notificationService.showSuccess(`Todo edited successfully!`);
+              this.todoEdited.emit();
             },
             error: (error) => {
               this.notificationService.showError(`The todo could not be updated`);
@@ -88,21 +89,14 @@ export class TodoListComponent implements OnChanges {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: () => {
-          this.todos = this.todos.filter(t => t.id !== todo.id);
-          this.dataSource.data = this.todos;
-          this.emitSelectedIds();
+          this.notificationService.showSuccess(`Todo deleted successfully!`);
+          this.todoDeleted.emit();
         },
         error: (error) => {
           console.error('Error deleting todo:', error);
           this.notificationService.showError(`The todo could not be deleted`);
         }
       });
-  }
-
-  private updateTodoInList(updatedTodo: ITodo): void {
-    this.todos = this.todos.map(todo => (todo.id === updatedTodo.id ? updatedTodo : todo));
-    this.dataSource.data = this.todos;
-    this.emitSelectedIds();
   }
 
   private emitSelectedIds(): void {
