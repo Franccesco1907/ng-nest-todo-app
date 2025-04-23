@@ -3,7 +3,7 @@ import { CollectionReference } from '@google-cloud/firestore';
 import { TodoDocument } from '@modules/todo/domain/documents';
 import { TodoModel } from '@modules/todo/domain/models';
 import { TodoRepositoryInterface } from '@modules/todo/domain/repositories';
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { TodoMapper } from '../mappers';
 
 @Injectable()
@@ -65,6 +65,9 @@ export class TodoRepository implements TodoRepositoryInterface {
   }
 
   async markAsCompleted(ids: string[], userId: string): Promise<void> {
+    if (!ids || ids.length === 0) {
+      throw new BadRequestException('No IDs provided for marking as completed');
+    }
     await Promise.all(
       ids.map(async (id) => {
         const existingDocument = await this.firestoreRepository.findOneBy(id, { userId });

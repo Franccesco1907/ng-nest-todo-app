@@ -1,5 +1,5 @@
-import { AllExceptionFilter } from '@common/filters/http-exception.filter';
-import { getEnvFile } from '@config/env';
+import { AllExceptionFilter } from '@common/filters';
+import { getEnvFile } from '@config/env/env';
 import { DatabaseModule } from '@database/database.module';
 import { TodoModule } from '@modules/todo/infrastructure/controllers';
 import { Module } from '@nestjs/common';

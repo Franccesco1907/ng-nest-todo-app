@@ -5,8 +5,8 @@ import {
   FirestoreCollectionProviders,
   FirestoreDatabaseProvider,
   FirestoreOptionsProvider,
-} from './firestore.providers';
-import { FirestoreModuleOptions } from './';
+} from '../providers';
+import { FirestoreModuleOptions } from '../types';
 
 @Module({})
 export class FirestoreModule {

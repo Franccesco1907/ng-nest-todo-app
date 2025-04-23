@@ -1,7 +1,7 @@
 import { getUniqueId } from '@common/utils';
 import { CollectionReference, Query, Timestamp } from '@google-cloud/firestore';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { BaseDocument } from './';
+import { BaseDocument } from '../documents';
 
 export class FirestoreBaseRepository<T extends BaseDocument<T>> {
   constructor(protected readonly collection: CollectionReference<T>) { }

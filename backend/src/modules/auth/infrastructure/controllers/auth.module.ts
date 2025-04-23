@@ -1,5 +1,5 @@
 import { DatabaseModule } from "@database/database.module";
-import { LoginUseCase } from "@modules/auth/application/use-cases/login.use-case";
+import { LoginUseCase } from "@modules/auth/application/use-cases";
 import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { JwtModule } from "@nestjs/jwt";

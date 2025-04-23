@@ -1,2 +1,2 @@
-export * from './id';
-export * from './response.dto';
+export * from './id/get-unique-id';
+export * from '../dto/response/response.dto';

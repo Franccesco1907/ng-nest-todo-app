@@ -1,3 +1,4 @@
+import { ResponseDto } from '@common/utils';
 import {
   CallHandler,
   ExecutionContext,
@@ -7,7 +8,6 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ResponseDto } from '../utils';
 
 @Injectable()
 export class ResponseInterceptor implements NestInterceptor {
