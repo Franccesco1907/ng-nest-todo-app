@@ -1,8 +1,5 @@
 # README - Proyecto Todo App Fullstack
 
-[![CI/CD Backend](https://github.com/<tu-usuario>/<tu-repositorio>/actions/workflows/backend-ci.yml/badge.svg)](https://github.com/<tu-usuario>/<tu-repositorio>/actions/workflows/backend-ci.yml)
-[![CI/CD Frontend](https://github.com/<tu-usuario>/<tu-repositorio>/actions/workflows/frontend-ci.yml/badge.svg)](https://github.com/<tu-usuario>/<tu-repositorio>/actions/workflows/frontend-ci.yml)
-
 ---
 
 ## Tabla de Contenidos
@@ -136,8 +133,8 @@ El repositorio está organizado como un monorepo con carpetas separadas para `fr
 
 1. Clonar el repositorio:
   ```bash
-  git clone <url-del-repositorio>
-  cd <nombre-del-repositorio>
+  git clone https://github.com/Franccesco1907/ng-nest-todo-app.git
+  cd ng-nest-todo-app
   ```
 
 2. Abrir en Dev Container (opcional):
