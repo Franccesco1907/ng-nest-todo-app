@@ -1,4 +1,5 @@
 @use "theme" as theme;
+@use "sass:map";
 
 .logo {
   text-align: center;
@@ -31,7 +32,7 @@ mat-form-field {
 
 
 mat-icon {
-  color: map-get(theme.$blue-accent-palette, 900);
+  color: map.get(theme.$blue-accent-palette, 900);
 }
 
 
@@ -41,7 +42,7 @@ button[mat-raised-button] {
   font-size: 16px;
   text-transform: uppercase;
   transition: background-color 0.3s ease, transform 0.2s ease;
-  background-color: map-get(theme.$blue-accent-palette, 900);
+  background-color: map.get(theme.$blue-accent-palette, 900);
 }
 
 

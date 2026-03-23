@@ -1,10 +1,12 @@
 @use "theme" as theme;
+@use "sass:map";
+@use "sass:color";
 
 .todo-page {
   padding: 2rem;
   background: linear-gradient(120deg,
-      rgba(map-get(theme.$blue-accent-palette, 600), 0.95),
-      rgba(map-get(theme.$orange-atom-palette, 900), 0.95));
+      rgba(map.get(theme.$blue-accent-palette, 600), 0.95),
+      rgba(map.get(theme.$orange-atom-palette, 900), 0.95));
   min-height: 100%;
   width: 100%;
 
@@ -71,7 +73,7 @@
   .todo-title {
     font-size: 2.5rem;
     font-weight: 700;
-    color: map-get(theme.$blue-accent-palette, 900);
+    color: map.get(theme.$blue-accent-palette, 900);
     margin-bottom: 1.5rem;
     text-align: center;
     text-transform: uppercase;
@@ -108,7 +110,7 @@
     position: fixed;
     bottom: 2rem;
     right: 30px;
-    background-color: rgba(map-get(theme.$blue-accent-palette, 600), 0.95);
+    background-color: rgba(map.get(theme.$blue-accent-palette, 600), 0.95);
     border: none;
     color: white;
     height: 4rem;
@@ -138,7 +140,7 @@
   .add-todo:hover {
     animation: none;
     transform: scale(1.1);
-    background-color: darken(map-get(theme.$blue-accent-palette, 600), 10%);
+    background-color: color.adjust(map.get(theme.$blue-accent-palette, 600), $lightness: -10%);
   }
 }
 

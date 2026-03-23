@@ -9,13 +9,13 @@
           <mat-label>Email</mat-label>
           <input matInput placeholder="E-mail" formControlName="email" type="email">
           <mat-icon matSuffix>email</mat-icon>
-          <mat-error *ngIf="email?.hasError('required') && email?.touched">The email is required</mat-error>
-          <mat-error *ngIf="email?.hasError('email') && email?.touched">Email not valid</mat-error>
+          @if (email?.hasError('required') && email?.touched) {
+          <mat-error>The email is required</mat-error>
+          }
+          @if (email?.hasError('email') && email?.touched) {
+          <mat-error>Email not valid</mat-error>
+          }
         </mat-form-field>
-      </p>
-
-      <p *ngIf="error" class="error">
-        {{ error }}
       </p>
 
       <div class="button">

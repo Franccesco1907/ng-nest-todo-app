@@ -3,7 +3,7 @@ import { CanActivateFn, Router, UrlTree } from '@angular/router';
 import { Observable, map, take } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 
-export const AuthGuard: CanActivateFn = ():
+export const authGuard: CanActivateFn = ():
   | Observable<boolean | UrlTree>
   | Promise<boolean | UrlTree>
   | boolean

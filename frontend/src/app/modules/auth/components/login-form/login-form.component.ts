@@ -1,5 +1,4 @@
-import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MaterialStandaloneModules } from '../../../../shared/ui';
@@ -9,14 +8,11 @@ import { AuthService } from '../../../../core/services/auth.service';
 @Component({
   selector: 'app-login-form',
   standalone: true,
-  imports: [CommonModule, MaterialStandaloneModules, ReactiveFormsModule],
+  imports: [MaterialStandaloneModules, ReactiveFormsModule],
   templateUrl: './login-form.component.html',
   styleUrl: './login-form.component.scss'
 })
 export class LoginFormComponent {
-  @Input() error: string | null = '';
-  @Output() submitEM = new EventEmitter();
-
   form: FormGroup = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
   });
@@ -46,9 +42,5 @@ export class LoginFormComponent {
 
   get email() {
     return this.form.get('email');
-  }
-
-  get password() {
-    return this.form.get('password');
   }
 }

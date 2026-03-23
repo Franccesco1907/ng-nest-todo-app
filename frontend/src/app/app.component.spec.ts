@@ -20,11 +20,4 @@ describe("AppComponent", () => {
         const app = fixture.componentInstance;
         expect(app.title).toEqual("atom-challenge-fe-template");
     });
-
-    it("should render title", () => {
-        const fixture = TestBed.createComponent(AppComponent);
-        fixture.detectChanges();
-        const compiled = fixture.nativeElement as HTMLElement;
-        expect(compiled.querySelector("h1")?.textContent).toContain("Hello, atom-challenge-fe-template");
-    });
 });

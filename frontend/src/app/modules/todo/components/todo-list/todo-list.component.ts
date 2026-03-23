@@ -1,9 +1,9 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { Component, DestroyRef, effect, inject, input, output } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
-import { Subject, takeUntil } from 'rxjs';
 import { ITodo } from '../../../../core/models';
 import { NotificationService, TodoService } from '../../../../core/services';
 import { MaterialStandaloneModules } from '../../../../shared/ui';
@@ -13,19 +13,21 @@ import { MatTableResponsiveModule } from '../../../../shared/directives/mat-tabl
 @Component({
   selector: 'app-todo-list',
   standalone: true,
-  imports: [CommonModule, MaterialStandaloneModules, TodoDialogComponent, MatTableResponsiveModule],
+  imports: [DatePipe, MaterialStandaloneModules, MatTableResponsiveModule],
   templateUrl: './todo-list.component.html',
   styleUrl: './todo-list.component.scss',
 })
-export class TodoListComponent implements OnChanges {
-  @Input() todos: ITodo[] = [];
-  @Output() selectionChanged = new EventEmitter<string[]>();
-  @Output() todoEdited = new EventEmitter<void>();
-  @Output() todoDeleted = new EventEmitter<void>();
-  private readonly destroy$ = new Subject<void>();
+export class TodoListComponent {
+  readonly todos = input<ITodo[]>([]);
+  readonly loading = input<boolean>(false);
+  readonly selectionChanged = output<string[]>();
+  readonly todoEdited = output<void>();
+  readonly todoDeleted = output<void>();
+
+  private readonly destroyRef = inject(DestroyRef);
 
   displayedColumns: string[] = ['select', 'title', 'description', 'createdAt', 'isCompleted', 'actions'];
-  dataSource = new MatTableDataSource<ITodo>(this.todos);
+  dataSource = new MatTableDataSource<ITodo>([]);
   selection = new SelectionModel<ITodo>(true, []);
 
   constructor(
@@ -33,61 +35,58 @@ export class TodoListComponent implements OnChanges {
     private readonly todoService: TodoService,
     private readonly notificationService: NotificationService,
   ) {
-    this.selection.changed.subscribe(() => {
-      this.emitSelectedIds();
+    effect(() => {
+      this.dataSource.data = this.todos();
+      this.selection.clear();
     });
+
+    this.selection.changed
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.emitSelectedIds());
   }
 
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['todos']) {
-      this.dataSource.data = this.todos;
-      this.emitSelectedIds();
-    }
+  isAllSelected(): boolean {
+    return this.selection.selected.length === this.dataSource.data.length
+      && this.dataSource.data.length > 0;
   }
 
-  isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected === numRows;
-  }
-
-  toggleAllRows() {
+  toggleAllRows(): void {
     if (this.isAllSelected()) {
       this.selection.clear();
       return;
     }
-
     this.selection.select(...this.dataSource.data);
   }
 
-  editTodo(todo: ITodo) {
+  editTodo(todo: ITodo): void {
     const dialogRef = this.dialog.open(TodoDialogComponent, {
       width: '500px',
       data: { mode: 'edit', todo }
     });
 
-    dialogRef.afterClosed().subscribe((result: ITodo) => {
-      if (result) {
-        const { id, createdAt, updatedAt, deletedAt, userId, ...updatedData } = result;
-        this.todoService.updateTodo(id, updatedData)
-          .pipe(takeUntil(this.destroy$))
-          .subscribe({
-            next: () => {
-              this.notificationService.showSuccess(`Todo edited successfully!`);
-              this.todoEdited.emit();
-            },
-            error: (error) => {
-              this.notificationService.showError(`The todo could not be updated`);
-            }
-          })
-      }
-    });
+    dialogRef.afterClosed()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((result: ITodo) => {
+        if (result) {
+          const { id, createdAt, updatedAt, deletedAt, userId, ...updatedData } = result;
+          this.todoService.updateTodo(id, updatedData)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+              next: () => {
+                this.notificationService.showSuccess(`Todo edited successfully!`);
+                this.todoEdited.emit();
+              },
+              error: () => {
+                this.notificationService.showError(`The todo could not be updated`);
+              }
+            });
+        }
+      });
   }
 
-  deleteTodo(todo: ITodo) {
+  deleteTodo(todo: ITodo): void {
     this.todoService.deleteTodo(todo.id)
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
           this.notificationService.showSuccess(`Todo deleted successfully!`);

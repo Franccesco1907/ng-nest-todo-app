@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { FirestoreModule } from './firestore';
+import { FirestoreModule } from './firestore/modules/firestore.module';
 
 @Module({
   imports: [

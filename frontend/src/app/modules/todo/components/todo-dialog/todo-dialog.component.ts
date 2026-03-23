@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, Inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -8,7 +7,7 @@ import { MaterialStandaloneModules } from '../../../../shared/ui';
 @Component({
   selector: 'app-todo-dialog',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MaterialStandaloneModules],
+  imports: [ReactiveFormsModule, MaterialStandaloneModules],
   templateUrl: './todo-dialog.component.html',
   styleUrl: './todo-dialog.component.scss'
 })
@@ -18,13 +17,13 @@ export class TodoDialogComponent {
 
   constructor(
     public dialogRef: MatDialogRef<TodoDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { mode: string, todo: ITodo },
+    @Inject(MAT_DIALOG_DATA) public data: { mode: string, todo: ITodo | null },
   ) {
-    this.todo = { ...data.todo };
+    this.todo = data.todo ? { ...data.todo } : {} as ITodo;
     this.todoForm = new FormGroup({
-      title: new FormControl(this.todo.title, [Validators.required, Validators.minLength(3)]),
-      description: new FormControl(this.todo.description, [Validators.required]),
-      isCompleted: new FormControl(this.todo.isCompleted)
+      title: new FormControl(this.todo.title ?? '', [Validators.required, Validators.minLength(3)]),
+      description: new FormControl(this.todo.description ?? '', [Validators.required]),
+      isCompleted: new FormControl(this.todo.isCompleted ?? false)
     });
   }
 

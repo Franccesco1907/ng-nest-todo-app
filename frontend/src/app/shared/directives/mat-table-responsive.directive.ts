@@ -11,6 +11,7 @@ import { map, mapTo, takeUntil } from 'rxjs/operators';
 
 @Directive({
   selector: '[matTableResponsive]',
+  standalone: true,
 })
 export class MatTableResponsiveDirective
   implements OnInit, AfterViewInit, OnDestroy {

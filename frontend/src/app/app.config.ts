@@ -1,17 +1,14 @@
-import { ApplicationConfig, importProvidersFrom } from "@angular/core";
-import { provideAnimationsAsync } from "@angular/platform-browser/animations/async";
+import { ApplicationConfig, provideZonelessChangeDetection } from "@angular/core";
 import { provideRouter } from "@angular/router";
 
-import { HttpClientModule, provideHttpClient, withInterceptors } from "@angular/common/http";
+import { provideHttpClient, withInterceptors } from "@angular/common/http";
 import { routes } from "./app.routes";
 import { authExpiredInterceptorFn, authInterceptorFn, responseHandlerInterceptorFn } from "./core/interceptors";
-import { MaterialStandaloneModules } from "./shared/ui";
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    provideZonelessChangeDetection(),
     provideRouter(routes),
-    provideAnimationsAsync(),
-    importProvidersFrom(HttpClientModule, MaterialStandaloneModules),
     provideHttpClient(
       withInterceptors([
         responseHandlerInterceptorFn,
