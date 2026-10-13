@@ -29,7 +29,6 @@ async function bootstrap() {
 
   SwaggerModule.setup('docs', app, document);
 
-  console.log('process.env', process.env);
   const configService: ConfigService = app.get(ConfigService);
 
   const allowedOrigins = configService.get<string>('ALLOWED_ORIGINS');
@@ -48,14 +47,11 @@ async function bootstrap() {
   const firestorePrivateKey = configService.get<string>('FIRESTORE_PRIVATE_KEY')!.replace(/\\n/g, '\n');
   const firestoreClientEmail = configService.get<string>('FIRESTORE_CLIENT_EMAIL')!;
 
-  console.log('firestorePrivateKey', firestorePrivateKey)
   const adminConfig: admin.ServiceAccount = {
     projectId: firestoreProjectId,
     privateKey: firestorePrivateKey,
     clientEmail: firestoreClientEmail,
   };
-
-  console.log('adminConfig', adminConfig)
 
   admin.initializeApp({
     credential: admin.credential.cert(adminConfig),

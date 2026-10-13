@@ -11,6 +11,7 @@ on:
 jobs:
   # Job to build and test the frontend and backend container
   build:
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
 
     steps:
@@ -77,8 +78,8 @@ jobs:
     steps:
       - name: Show Deployment Instructions
         run: |
-          echo "🚀 Images have been successfully pushed to Docker Hub with the 'latest' tag."
-          echo "🛠️ Go to Railway and manually execute 'Deploy from Docker Hub' for each service:"
-          echo "👉 Frontend: https://railway.app/project/${{ secrets.RAILWAY_PROJECT_ID }}/service/${{ secrets.RAILWAY_SERVICE_ID_FRONTEND }}"
-          echo "👉 Backend: https://railway.app/project/${{ secrets.RAILWAY_PROJECT_ID }}/service/${{ secrets.RAILWAY_SERVICE_ID_BACKEND }}"
+          echo "?? Images have been successfully pushed to Docker Hub with the 'latest' tag."
+          echo "??? Go to Railway and manually execute 'Deploy from Docker Hub' for each service:"
+          echo "?? Frontend: https://railway.app/project/${{ secrets.RAILWAY_PROJECT_ID }}/service/${{ secrets.RAILWAY_SERVICE_ID_FRONTEND }}"
+          echo "?? Backend: https://railway.app/project/${{ secrets.RAILWAY_PROJECT_ID }}/service/${{ secrets.RAILWAY_SERVICE_ID_BACKEND }}"
               
